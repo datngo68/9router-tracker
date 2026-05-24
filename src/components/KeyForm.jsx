@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { APP_NAME } from "../lib/config.js";
 
-function hostnameOf(url) {
-  try { return new URL(url).host; } catch { return url; }
-}
-
 export default function KeyForm({ onSubmit, fixedBaseUrl, defaultBaseUrl }) {
   const [apiKey, setApiKey] = useState("");
   const [baseUrl, setBaseUrl] = useState(fixedBaseUrl || defaultBaseUrl || "");
@@ -153,13 +149,13 @@ export default function KeyForm({ onSubmit, fixedBaseUrl, defaultBaseUrl }) {
 
           {fixedBaseUrl && (
             <p className="mt-4 text-center text-[11px] text-muted">
-              Kết nối đến <span className="font-medium text-text">{hostnameOf(fixedBaseUrl)}</span>
+              Server đã được cấu hình sẵn.
             </p>
           )}
         </form>
 
         <p className="mt-5 text-center text-[11px] leading-relaxed text-muted">
-          App chạy hoàn toàn trên trình duyệt. Key chỉ gửi tới server 9router để đọc thống kê
+          App chạy hoàn toàn trên trình duyệt. Key chỉ gửi tới máy chủ để đọc thống kê
           {fixedBaseUrl ? "" : " — đảm bảo Base URL đúng"}, không qua máy chủ trung gian nào khác.
         </p>
       </div>

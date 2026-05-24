@@ -15,7 +15,7 @@ export async function fetchUsage({ baseUrl, apiKey, signal }) {
     });
   } catch (e) {
     if (e?.name === "AbortError") throw e;
-    throw new ApiError(`Không kết nối được tới ${baseUrl}: ${e.message}`, "network");
+    throw new ApiError("Không kết nối được tới máy chủ. Kiểm tra mạng hoặc thử lại sau.", "network");
   }
 
   if (res.status === 401) {

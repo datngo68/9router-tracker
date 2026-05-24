@@ -6,10 +6,6 @@ import RecentTable from "./RecentTable.jsx";
 import { fmtClock, fmtVnd, n } from "../lib/format.js";
 import { APP_NAME } from "../lib/config.js";
 
-function hostnameOf(url) {
-  try { return new URL(url).host; } catch { return url; }
-}
-
 function StatusBadge({ data }) {
   if (!data?.key) return null;
   const expired = data.key.expiresAt && new Date(data.key.expiresAt).getTime() < Date.now();
@@ -45,7 +41,6 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
   const { data, error, loading, lastUpdated, stopped, refresh } = useUsage({ apiKey, baseUrl });
 
   const totals = data?.last7d?.totals;
-  const host = hostnameOf(baseUrl);
 
   return (
     <div className="min-h-screen">
@@ -59,7 +54,6 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
               </svg>
             </span>
             <span className="text-sm font-medium tracking-tight">{APP_NAME}</span>
-            <span className="hidden text-xs text-muted sm:inline">· {host}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="hidden items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-[11px] text-muted sm:inline-flex">
@@ -123,7 +117,7 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
             )}
             {error.kind === "network" && (
               <p className="mt-1 text-xs text-red-300/80">
-                Không kết nối được tới server. Kiểm tra mạng hoặc thử lại sau.
+                Không kết nối được tới máy chủ. Kiểm tra mạng hoặc thử lại sau.
               </p>
             )}
           </div>
@@ -157,7 +151,7 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
         )}
 
         <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-4 text-[11px] text-muted">
-          <span>Cập nhật mỗi 5 giây · Kết nối tới {host}</span>
+          <span>Cập nhật mỗi 5 giây</span>
           <span>Key chỉ ở trong trình duyệt của bạn</span>
         </footer>
       </div>
