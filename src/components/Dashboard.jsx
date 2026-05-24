@@ -3,7 +3,7 @@ import UsageBars from "./UsageBars.jsx";
 import DailyChart from "./DailyChart.jsx";
 import ModelTable from "./ModelTable.jsx";
 import RecentTable from "./RecentTable.jsx";
-import { fmtClock, fmtVnd, n } from "../lib/format.js";
+import { fmtClock, fmtUsd, estimateUsd, n } from "../lib/format.js";
 import { APP_NAME } from "../lib/config.js";
 
 function StatusBadge({ data }) {
@@ -138,7 +138,7 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
             <div className="grid gap-4 sm:grid-cols-3">
               <Stat label="Input (7 ngày)" value={n(totals?.promptTokens)} suffix="tokens" />
               <Stat label="Output (7 ngày)" value={n(totals?.completionTokens)} suffix="tokens" />
-              <Stat label="Chi phí (7 ngày)" value={fmtVnd(totals?.cost)} />
+              <Stat label="Chi phí ước tính (7 ngày)" value={fmtUsd(estimateUsd(totals?.promptTokens, totals?.completionTokens))} hint="$5 / 1M input · $30 / 1M output" />
             </div>
 
             <DailyChart days={data.last7d?.byDay} />
@@ -159,13 +159,14 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
   );
 }
 
-function Stat({ label, value, suffix }) {
+function Stat({ label, value, suffix, hint }) {
   return (
     <div className="rounded-xl border border-border bg-surface p-5">
       <p className="text-xs uppercase tracking-wide text-muted">{label}</p>
       <p className="mt-1 text-2xl font-semibold">
         {value} {suffix && <span className="text-sm font-normal text-muted">{suffix}</span>}
       </p>
+      {hint && <p className="mt-1 text-[11px] text-muted">{hint}</p>}
     </div>
   );
 }

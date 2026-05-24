@@ -1,4 +1,4 @@
-import { n, fmtVnd } from "../lib/format.js";
+import { n, fmtUsd, estimateUsd } from "../lib/format.js";
 
 export default function ModelTable({ rows }) {
   const list = rows || [];
@@ -16,7 +16,7 @@ export default function ModelTable({ rows }) {
                 <th className="px-2 py-2 text-right font-normal">Requests</th>
                 <th className="px-2 py-2 text-right font-normal">Input</th>
                 <th className="px-2 py-2 text-right font-normal">Output</th>
-                <th className="px-2 py-2 text-right font-normal">Chi phí</th>
+                <th className="px-2 py-2 text-right font-normal">Chi phí ước tính</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
@@ -26,7 +26,7 @@ export default function ModelTable({ rows }) {
                   <td className="px-2 py-2 text-right">{n(r.requests)}</td>
                   <td className="px-2 py-2 text-right">{n(r.promptTokens)}</td>
                   <td className="px-2 py-2 text-right">{n(r.completionTokens)}</td>
-                  <td className="px-2 py-2 text-right text-muted">{fmtVnd(r.cost)}</td>
+                  <td className="px-2 py-2 text-right text-muted">{fmtUsd(estimateUsd(r.promptTokens, r.completionTokens))}</td>
                 </tr>
               ))}
             </tbody>
