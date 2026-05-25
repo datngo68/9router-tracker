@@ -50,3 +50,27 @@ export function fmtClock(iso) {
   const d = new Date(iso);
   return d.toLocaleTimeString("vi-VN", { hour12: false });
 }
+
+// Compact relative time: "47s", "30m", "1h", "6h", "2d".
+export function fmtAgo(iso, nowMs = Date.now()) {
+  if (!iso) return "—";
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return "—";
+  const seconds = Math.max(0, Math.floor((nowMs - t) / 1000));
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  return `${days}d`;
+}
+
+// Infer the request path from provider since the public API doesn't
+// expose the raw path. Best-effort cosmetic mapping for the logs view.
+export function inferPath(provider) {
+  const p = String(provider || "").toLowerCase();
+  if (p === "anthropic" || p === "claude") return "/v1/messages";
+  if (p === "google" || p === "gemini") return "/v1beta/models";
+  return "/v1/chat/completions";
+}

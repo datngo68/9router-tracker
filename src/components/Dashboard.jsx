@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { useUsage } from "../hooks/useUsage.js";
 import UsageBars from "./UsageBars.jsx";
 import DailyChart from "./DailyChart.jsx";
 import ModelTable from "./ModelTable.jsx";
-import RecentTable from "./RecentTable.jsx";
+import RequestLogs from "./RequestLogs.jsx";
 import { fmtClock, fmtUsd, estimateUsd, n } from "../lib/format.js";
 import { APP_NAME } from "../lib/config.js";
 
@@ -38,7 +39,12 @@ function LiveDot({ stopped, loading }) {
 }
 
 export default function Dashboard({ apiKey, baseUrl, onLogout }) {
-  const { data, error, loading, lastUpdated, stopped, refresh } = useUsage({ apiKey, baseUrl });
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const { data, error, loading, lastUpdated, stopped, refresh } = useUsage({
+    apiKey,
+    baseUrl,
+    enabled: autoRefresh,
+  });
 
   const totals = data?.last7d?.totals;
 
@@ -143,10 +149,13 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
 
             <DailyChart days={data.last7d?.byDay} />
 
-            <div className="grid gap-4 lg:grid-cols-2">
-              <ModelTable rows={data.last7d?.byModel} />
-              <RecentTable rows={data.recent} />
-            </div>
+            <ModelTable rows={data.last7d?.byModel} />
+
+            <RequestLogs
+              recent={data.recent}
+              autoRefresh={autoRefresh}
+              onAutoRefreshChange={setAutoRefresh}
+            />
           </div>
         )}
 
