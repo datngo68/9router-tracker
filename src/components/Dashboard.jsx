@@ -139,6 +139,12 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
 
         {data && (
           <div className="mt-4 flex flex-col gap-4">
+            <RequestLogs
+              recent={data.recent}
+              autoRefresh={autoRefresh}
+              onAutoRefreshChange={setAutoRefresh}
+            />
+
             <UsageBars usage={data.usage} limits={data.limits} />
 
             <div className="grid gap-4 sm:grid-cols-3">
@@ -150,12 +156,6 @@ export default function Dashboard({ apiKey, baseUrl, onLogout }) {
             <DailyChart days={data.last7d?.byDay} />
 
             <ModelTable rows={data.last7d?.byModel} />
-
-            <RequestLogs
-              recent={data.recent}
-              autoRefresh={autoRefresh}
-              onAutoRefreshChange={setAutoRefresh}
-            />
           </div>
         )}
 
