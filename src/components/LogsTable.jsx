@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fmtAgo, fmtUsd, estimateUsd, n, fmtTokens, inferPath } from "../lib/format.js";
+import { fmtAgo, fmtUsd, estimateUsd, n, fmtTokens, inferPath, isStatusOk, statusLabel } from "../lib/format.js";
 
 function ModelChip({ model }) {
   if (!model) return <span className="text-muted">—</span>;
@@ -11,13 +11,13 @@ function ModelChip({ model }) {
 }
 
 function StatusChip({ status }) {
-  const ok = status == null || (status >= 200 && status < 300);
+  const ok = isStatusOk(status);
   const cls = ok
     ? "bg-emerald-500/10 text-emerald-400 ring-emerald-500/20"
     : "bg-red-500/10 text-red-400 ring-red-500/20";
   return (
     <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[11px] ring-1 ${cls}`}>
-      {ok ? "Success" : `Error ${status}`}
+      {statusLabel(status)}
     </span>
   );
 }

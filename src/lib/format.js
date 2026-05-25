@@ -66,6 +66,32 @@ export function fmtAgo(iso, nowMs = Date.now()) {
   return `${days}d`;
 }
 
+// Status from the public API may be a number (HTTP code) or a string
+// like "ok" / "success" / "error". Normalise to a boolean.
+export function isStatusOk(status) {
+  if (status == null) return true;
+  if (typeof status === "number") return status >= 200 && status < 300;
+  const s = String(status).trim().toLowerCase();
+  if (!s) return true;
+  if (s === "ok" || s === "success" || s === "completed" || s === "done") return true;
+  const asNum = Number(s);
+  if (!Number.isNaN(asNum)) return asNum >= 200 && asNum < 300;
+  return false;
+}
+
+// Render label for the Status column. Returns "Success" or "Error <code>".
+export function statusLabel(status) {
+  if (isStatusOk(status)) return "Success";
+  if (status == null || status === "") return "Error";
+  if (typeof status === "number") return `Error ${status}`;
+  const s = String(status).trim();
+  const asNum = Number(s);
+  if (!Number.isNaN(asNum)) return `Error ${asNum}`;
+  // String like "error" / "failed" → just "Error"; otherwise show the value.
+  if (/^err(or)?$|^fail(ed)?$/i.test(s)) return "Error";
+  return `Error: ${s}`;
+}
+
 // Infer the request path from provider since the public API doesn't
 // expose the raw path. Best-effort cosmetic mapping for the logs view.
 export function inferPath(provider) {
